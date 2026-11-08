@@ -143,3 +143,12 @@ After the helper reports success:
 ```
 
 The GAUL 2015 deprecation warning is separate from the projection error. Its dated boundary is retained during recovery so the study area does not silently change. Migrating to GAUL 2025 requires reviewing the new dataset's coverage/property schema.
+
+After the repaired climate test completes successfully, an original ZIP checkout still needs its JavaScript tutorial headers updated before the first tutorial run. This preparation makes no exports and backs up modified sources:
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Bipul-roy-AI/GEE_Analysis/main/tools/prepare_tutorial_queue.py" -OutFile ".\tools\prepare_tutorial_queue.py"
+.\.venv\Scripts\python.exe .\tools\prepare_tutorial_queue.py
+```
+
+Only after successful preparation run `.\run_sequential.bat tutorials`. The tool preserves completed national exports/state and refuses the default tutorial-state file if a tutorial run already exists. Do not delete state to bypass that refusal. Current checkouts already use EPSG:4326, so preparation updates zero files there.
