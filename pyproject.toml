@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bangladesh-gee-analysis"
+version = "0.1.0"
+description = "Bangladesh thematic Earth Engine analyses and Drive export tools"
+requires-python = ">=3.11"
+dependencies = ["earthengine-api==1.7.51", "numpy>=1.26,<3", "pandas>=2.2,<4", "scipy>=1.13,<2", "matplotlib>=3.8,<4", "google-api-python-client>=2.100,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "nbformat>=5,<6", "esprima==4.0.1"]
+notebooks = ["jupyterlab>=4,<5", "geemap>=0.35", "xee>=0.0.20", "xarray>=2024.1", "rioxarray>=0.17", "netCDF4", "dask[array]", "h5netcdf", "scikit-learn", "statsmodels", "pymannkendall", "pyhomogeneity", "hvplot", "cartopy", "xgboost", "pystac-client", "stackstac", "shapely", "geopandas", "scikit-image", "seaborn", "rasterio", "openpyxl", "plotly", "scipy"]
+
+[tool.setuptools.packages.find]
+include = ["bdgee*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+outputs/
+.env
+credentials*
+*.tif
+*.tiff
+*.nc
