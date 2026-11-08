@@ -124,3 +124,22 @@ The request ID is persisted and the EE API's request-id mechanism makes replay i
 ## What has actually been verified
 
 The state-machine tests verify strict ordering, Drive/upload failure gates, unknown-status stops, resumability, no repeated verified work, and the single-runner lock. Integration tests exercise two real tutorial graphs through the official JS SDK and back into Python export builders using offline API signatures. They do not compute satellite results. Live EE/Drive execution is still blocked in the preparation machine by missing account authorization, and this code has not been executed on your Windows PC. The runner will surface remaining tutorial defects rather than label them successful or quietly skip them.
+
+## Recover the reported first climate projection failure (ZIP checkout)
+
+Do not delete `outputs` or rerun the unmodified failed task. From the project folder in PowerShell:
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Bipul-roy-AI/GEE_Analysis/main/tools/repair_projection_failure.py" -OutFile ".\tools\repair_projection_failure.py"
+.\.venv\Scripts\python.exe .\tools\repair_projection_failure.py .\outputs\climate_test_state.json
+```
+
+This self-contained helper works in the previous ZIP checkout: it checks the failed task and EPSG:4326 on Google's server, creates state/code backups, patches the legacy national projection default and updates unfinished task graphs. It resets only the failed task with a fresh request ID/prefix, preserving verified work. It accepts this specific national projection failure, not arbitrary failures, and submits no exports. It also refreshes the engine fingerprint using the exact on-disk code, avoiding a configuration-mismatch error on resume.
+
+After the helper reports success:
+
+```powershell
+.\.venv\Scripts\python.exe -m bdgee.batch --mode national --themes climate --state outputs\climate_test_state.json --run
+```
+
+The GAUL 2015 deprecation warning is separate from the projection error. Its dated boundary is retained during recovery so the study area does not silently change. Migrating to GAUL 2025 requires reviewing the new dataset's coverage/property schema.

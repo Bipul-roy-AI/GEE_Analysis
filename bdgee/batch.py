@@ -13,7 +13,7 @@ import time
 import uuid
 import ee
 from . import PROJECT
-from .core import initialize, plan_product, boundaries
+from .core import initialize, plan_product, boundaries, validate_projection
 from .state import write_json, exclusive_lock
 from .workflows import THEMES, products
 
@@ -186,6 +186,7 @@ class LiveBackend:
 
     def plan(self,job):
         if job['key'].startswith('national/'):
+            validate_projection()
             country,units=boundaries(self.settings['admin_level'])
             if country.size().getInfo()!=1 or units.size().getInfo()==0:raise RuntimeError('Boundary preflight failed')
             tasks=[]

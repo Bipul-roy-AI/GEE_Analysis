@@ -7,7 +7,7 @@ Preparation date: 2026-11-08.
 - `pip install -e '.[dev]'`: editable installation of the national toolkit and development tools.
 - `python -m bdgee --help`: CLI loads and exposes all 16 national workflows.
 - `python tools/validate_sources.py`: 245 original hashes match; 146 adapted Python scripts parse; 99 adapted JavaScript scripts parse; all 146 output-free notebook schemas and code cells validate.
-- `python -m pytest -q`: **27 tests passed, 16 workflow subtests passed**. Coverage includes all national EE computation/export graphs, typed class-area/population aggregation, theme-folder routing, complete inventory, robust trends, seasonal anomalies and missing-data spell handling.
+- `python -m pytest -q`: **33 tests passed, 16 workflow subtests passed**. Coverage includes all national EE computation/export graphs, typed class-area/population aggregation, theme-folder routing, complete inventory, robust trends, seasonal anomalies and missing-data spell handling.
 - `python -m compileall -q bdgee tools tests`: toolkit, importer, status helper and tests compile.
 
 The EE graph tests use the official SDK's bundled API signatures offline. They detected and corrected an unsupported list-intersection method during preparation. They do not fetch imagery, simulate numerical results or verify catalog asset availability.
@@ -30,3 +30,9 @@ The EE graph tests use the official SDK's bundled API signatures offline. They d
 - Some tutorial-specific training features/private assets must be supplied and reviewed. Empirical models require Bangladesh calibration and independent validation.
 
 Next steps: authenticate your EE account, verify project/API permissions, run a national workflow without `--submit`, review the plan, submit a representative product, inspect task completion and Drive outputs, then validate each scientific method needed for your study. See [RUNNING.md](RUNNING.md) and [METHODS.md](METHODS.md).
+
+## Projection-failure recovery
+
+A user-reported first climate export failed with “Projection: The CRS of a map projection could not be parsed.” The prior export graph specified EPSG:6933 and preserved that value through saved-state serialization. This backend failure was not detected by offline graph tests. Defaults now use EPSG:4326, with a tiny server-side projection evaluation before national task planning. Native population exports use the native projection CRS string.
+
+The recovery helper checks the actual server failure, refuses concurrent/unknown submitted tasks, verifies EPSG:4326 on the server, backs up local code/state and rewrites only unfinished national task configurations. It refreshes the saved engine fingerprint and retains completed exports and failed-attempt history. Regression tests cover serialized graph repair, pending tasks, verified-task preservation, resume fingerprints, refusal cases and projection-preflight failure. Live recovery remains to be run through the user's authorized account; local tests do not establish remote success.

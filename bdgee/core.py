@@ -8,6 +8,7 @@ from . import PROJECT
 
 BOUNDARY = 'FAO/GAUL/2015/level0'
 ADMIN = 'FAO/GAUL/2015/level2'
+DEFAULT_CRS = 'EPSG:4326'
 
 
 def initialize(authenticate=False):
@@ -15,6 +16,15 @@ def initialize(authenticate=False):
         ee.Authenticate(scopes=['https://www.googleapis.com/auth/earthengine',
                                 'https://www.googleapis.com/auth/drive'])
     ee.Initialize(project=PROJECT)
+
+
+def validate_projection(crs=DEFAULT_CRS):
+    """Evaluate a tiny request on Google's server before any batch submission."""
+    result = ee.Image.constant(1).reduceRegion(
+        reducer=ee.Reducer.mean(), geometry=ee.Geometry.Rectangle([90,23,90.01,23.01]),
+        scale=1000, crs=crs, maxPixels=100).getInfo()
+    if not result or result.get('constant') != 1:
+        raise RuntimeError(f'Projection preflight failed for {crs}: {result}')
 
 
 def boundaries(admin_level=2):
@@ -57,7 +67,7 @@ def plan_product(product, theme, period, admin_level=2):
         stats_img, reducer = img, ee.Reducer.sum()
     else:
         stats_img = img
-    stats_crs = img.projection() if product.kind == 'count' else 'EPSG:6933'
+    stats_crs = img.projection().crs() if product.kind == 'count' else DEFAULT_CRS
     def annotate(feature):
         return feature.set({'product': product.name, 'period': period,
                             'units': 'km2 by class' if product.kind == 'categorical' else product.units,

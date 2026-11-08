@@ -49,12 +49,12 @@ Map.addLayer = function(object, vis, name, shown, opacity) {
   if (BD_CREATE_EXPORTS && object instanceof ee.Image) {
     var image = ee.Image(object).clip(BD_ROI);
     Export.image.toDrive({image:image, description:name || 'map', region:BD_ROI,
-      scale:BD_SCALE, crs:'EPSG:6933', fileFormat:'GeoTIFF',
+      scale:BD_SCALE, crs:'EPSG:4326', fileFormat:'GeoTIFF',
       formatOptions:{cloudOptimized:true}});
     var stats = image.reduceRegions({collection:BD_DISTRICTS.merge(BD_COUNTRY),
       reducer:ee.Reducer.mean().combine({reducer2:ee.Reducer.minMax(), sharedInputs:true})
         .combine({reducer2:ee.Reducer.count(), sharedInputs:true}),
-      scale:BD_SCALE, crs:'EPSG:6933', tileScale:4})
+      scale:BD_SCALE, crs:'EPSG:4326', tileScale:4})
       .map(function(f){return f.setGeometry(null).set('source',BD_SOURCE);});
     Export.table.toDrive({collection:stats, description:(name || 'map')+'_descriptive_stats', fileFormat:'CSV'});
   }
