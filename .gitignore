@@ -9,3 +9,4 @@ credentials*
 *.tif
 *.tiff
 *.nc
+node_modules/

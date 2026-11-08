@@ -1,5 +1,6 @@
 """Helpers for adapted tutorial notebooks; exports are planned, never auto-submitted."""
 from pathlib import Path
+import os
 import json
 import numbers
 import ee
@@ -14,7 +15,7 @@ def export_outputs(namespace, theme, source, scale=1000):
     Intermediate globals are included intentionally so results are not omitted.
     Set scale per analysis: the 1000m tutorial default is NOT native resolution.
     """
-    root=Path('outputs')/theme/source
+    root=Path(os.environ.get('BDGEE_OUTPUT_DIR',Path('outputs')/theme/source))
     root.mkdir(parents=True,exist_ok=True)
     tasks=[]; errors={}; scalars={}; seen=set()
     from .core import boundaries

@@ -1,5 +1,7 @@
 # Running the analyses
 
+For strict sequential automation, resume, Windows setup and the master notebook, use [SEQUENTIAL.md](SEQUENTIAL.md). The individual CLI examples below submit tasks without waiting for completion; use the batch runner when ordering and verified Drive delivery are required.
+
 ## Before a national export
 
 1. Activate the virtual environment and authenticate to Earth Engine using your own account. The account must have EE access and permission to use `axial-paratext-491911-b6`.

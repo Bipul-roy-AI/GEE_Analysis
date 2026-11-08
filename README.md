@@ -4,6 +4,21 @@ Bangladesh adaptations of **all 245 supplied tutorial files**, organized into 15
 
 **Validation status:** source conversion and offline API-graph tests are available. Earth Engine computations, dataset availability, numerical outputs and Drive delivery have **not** been verified: this machine has no authorized Earth Engine session. No export tasks have been submitted. The project ID is a billing/quota project identifier, not authentication.
 
+## Automated sequential execution on your PC
+
+Use [the Windows/Jupyter guide](docs/SEQUENTIAL.md) for workspace `D:\Gihub_Projects\BD_GEE_Analysis` and [the master notebook](notebooks/Run_Bangladesh_Sequential.ipynb).
+
+- **Tutorial queue:** 213 individual examples, grouped by theme; 32 supervised/empirical-calibration examples deferred and explicitly reported.
+- **National queue:** the 16 improved workflows, runnable separately.
+- **Strict order:** one source process, one EE export, then Drive verification. The next task/source cannot start until the previous outputs pass. Local files upload sequentially with checksum verification.
+- **Recovery:** atomic saved state, stable submission request IDs, single-runner lock, and stop-on-failure behavior. Resume the same command to monitor an already-submitted task; never delete state to skip unfinished work.
+
+```text
+run_sequential.bat tutorials
+```
+
+Run this only after installation and Google account authorization. Individual tutorial execution remains experimental: missing dependencies, source defects, or failed exports stop the queue for diagnosis; they are never silently skipped. Preparation has not run your analyses on Google or accessed your D: drive.
+
 ## Choose a workflow
 
 - **National analysis:** use `python -m bdgee ...` below. These workflows add QA masks, units, class-area/count-aware statistics and reproducible exports.

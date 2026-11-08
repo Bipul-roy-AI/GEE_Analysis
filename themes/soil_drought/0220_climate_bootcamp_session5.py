@@ -11,7 +11,7 @@ roi = geometry = border = iran = tehran = province = loc = point = BD_ROI
 from pathlib import Path
 import os
 _REPO_ROOT = Path.cwd()
-_OUTPUT_DIR = _REPO_ROOT / 'outputs' / 'soil_drought' / '0220_climate_bootcamp_session5'
+_OUTPUT_DIR = Path(os.environ.get('BDGEE_OUTPUT_DIR', _REPO_ROOT / 'outputs' / 'soil_drought' / '0220_climate_bootcamp_session5'))
 _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 os.chdir(_OUTPUT_DIR)
 """05_class5_spei_mapping_classification.ipynb

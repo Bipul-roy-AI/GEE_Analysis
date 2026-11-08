@@ -11,7 +11,7 @@ roi = geometry = border = iran = tehran = province = loc = point = BD_ROI
 from pathlib import Path
 import os
 _REPO_ROOT = Path.cwd()
-_OUTPUT_DIR = _REPO_ROOT / 'outputs' / 'water_quality' / '0148_xee_water_temperature'
+_OUTPUT_DIR = Path(os.environ.get('BDGEE_OUTPUT_DIR', _REPO_ROOT / 'outputs' / 'water_quality' / '0148_xee_water_temperature'))
 _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 os.chdir(_OUTPUT_DIR)
 """GEE_0068_water_temperature.ipynb

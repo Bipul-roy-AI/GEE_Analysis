@@ -7,10 +7,19 @@ Preparation date: 2026-11-08.
 - `pip install -e '.[dev]'`: editable installation of the national toolkit and development tools.
 - `python -m bdgee --help`: CLI loads and exposes all 16 national workflows.
 - `python tools/validate_sources.py`: 245 original hashes match; 146 adapted Python scripts parse; 99 adapted JavaScript scripts parse; all 146 output-free notebook schemas and code cells validate.
-- `python -m pytest -q`: **9 tests passed, 16 workflow subtests passed**. Coverage includes all national EE computation/export graphs, typed class-area/population aggregation, theme-folder routing, complete inventory, robust trends, seasonal anomalies and missing-data spell handling.
+- `python -m pytest -q`: **27 tests passed, 16 workflow subtests passed**. Coverage includes all national EE computation/export graphs, typed class-area/population aggregation, theme-folder routing, complete inventory, robust trends, seasonal anomalies and missing-data spell handling.
 - `python -m compileall -q bdgee tools tests`: toolkit, importer, status helper and tests compile.
 
 The EE graph tests use the official SDK's bundled API signatures offline. They detected and corrected an unsupported list-intersection method during preparation. They do not fetch imagery, simulate numerical results or verify catalog asset availability.
+
+## Sequential automation checks
+
+- Queue preview accounts for all 245 sources: **213 eligible tutorials, 32 explicitly deferred**; a separate queue exposes all 16 national workflows.
+- Ordering tests cover one task at a time, no next source before delivery verification, failed/unknown status, absent/empty Drive files, multipart files, local-upload failures, durable resume, source-only refresh, configuration mismatch, and the single-runner lock.
+- Actual Earth Engine JavaScript SDK 1.7.51 installed with npm. Two tutorial graphs pass through the Node planner and Python export builders using official offline API signatures. Export graph serialization and stable request-ID restoration are tested for both image and table tasks.
+- Master notebook schema/code cells and JavaScript planner syntax validate. Python modules/tools compile.
+- Windows launchers are provided for the requested D: workspace but have not been executed on a Windows machine.
+- A live batch launch was attempted here and stopped during Earth Engine initialization with the authorization message. No source computation or export began.
 
 ## Not executed / outstanding
 

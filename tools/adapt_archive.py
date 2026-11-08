@@ -58,6 +58,10 @@ class AdaptPython(ast.NodeTransformer):
         return node
     def visit_Call(self,node):
         target=ast.unparse(node.func)
+        if target=='gpd.read_file':
+            return ast.copy_location(ast.parse("__import__('geemap').ee_to_gdf(BD_COUNTRY)",mode='eval').body,node)
+        if target=='ee.FeatureCollection' and node.args and isinstance(node.args[0],ast.Constant) and node.args[0].value=='users/amirhosseinahrari/Gilan':
+            return ast.copy_location(ast.Name(id='BD_COUNTRY',ctx=ast.Load()),node)
         if target in ('ee.Initialize','ee.Authenticate'):
             return ast.copy_location(ast.Constant(None),node)
         if target.endswith('ee.Geometry.Point') or target.endswith('ee.Geometry.Polygon') or target.endswith('ee.Geometry.Rectangle'):
@@ -149,16 +153,20 @@ def main(archive):
         try:
             if language=='python':
                 adapted=py_adapt(source)
-                header=f'''# Bangladesh adaptation: {name}\n# Original author: Amirhossein Ahrari; see original attribution below and originals/.\nfrom bdgee.core import initialize, boundaries\nfrom bdgee.notebook import export_outputs, upload_local\ninitialize()  # Run `earthengine authenticate` first; project is configured in bdgee.\nBD_COUNTRY, BD_DISTRICTS = boundaries()\nBD_ROI = BD_COUNTRY.geometry()\nBD_BBOX = [88.0, 20.5, 92.7, 26.7]  # search only, not analysis boundary\nroi = geometry = border = iran = tehran = province = loc = point = BD_ROI\n# Run from the repository root; all local outputs are isolated by source.\nfrom pathlib import Path\nimport os\n_REPO_ROOT = Path.cwd()\n_OUTPUT_DIR = _REPO_ROOT / 'outputs' / '{theme}' / '{name}'\n_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)\nos.chdir(_OUTPUT_DIR)\n'''
+                header=f'''# Bangladesh adaptation: {name}\n# Original author: Amirhossein Ahrari; see original attribution below and originals/.\nfrom bdgee.core import initialize, boundaries\nfrom bdgee.notebook import export_outputs, upload_local\ninitialize()  # Run `earthengine authenticate` first; project is configured in bdgee.\nBD_COUNTRY, BD_DISTRICTS = boundaries()\nBD_ROI = BD_COUNTRY.geometry()\nBD_BBOX = [88.0, 20.5, 92.7, 26.7]  # search only, not analysis boundary\nroi = geometry = border = iran = tehran = province = loc = point = BD_ROI\n# Run from the repository root; all local outputs are isolated by source.\nfrom pathlib import Path\nimport os\n_REPO_ROOT = Path.cwd()\n_OUTPUT_DIR = Path(os.environ.get('BDGEE_OUTPUT_DIR', _REPO_ROOT / 'outputs' / '{theme}' / '{name}'))\n_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)\nos.chdir(_OUTPUT_DIR)\n'''
                 footer=f'''\n# Review these task plans; task creation does not start exports.\nos.chdir(_REPO_ROOT)\nbd_tasks = export_outputs(globals(), '{theme}', '{name}', scale=1000)\n# Set an appropriate native scale above before creating plans.\n# for task in bd_tasks: task.start()\n# upload_local(_OUTPUT_DIR, '{theme}')  # explicit upload; requires Drive OAuth scope\n'''
                 script=header+adapted+footer
                 target=out/(name.removesuffix('.py')+'.py')
                 target.write_text(script)
                 notebook=nb.v4.new_notebook(cells=[nb.v4.new_markdown_cell('# Bangladesh: '+name+'\n\n'+'\n\n'.join(notes)),nb.v4.new_code_cell(header),nb.v4.new_code_cell(adapted),nb.v4.new_code_cell(footer)])
+                for cell_index,cell in enumerate(notebook.cells):
+                    cell['id']=hashlib.sha256((name+str(cell_index)).encode()).hexdigest()[:12]
                 nb.write(notebook,str(target.with_suffix('.ipynb')))
                 ast.parse(script)
             else:
                 adapted=js_adapt(source)
+                if name=='00001_lake_area_estimation':
+                    adapted="// Replace the tutorial's missing imported Landsat-8 collection.\nvar imageCollection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2');\n"+adapted
                 header=(ROOT/'tools/js_header.txt').read_text().replace('__THEME__',theme).replace('__SOURCE__',name)
                 target=out/(name+'.js')
                 target.write_text(header+'\n'+adapted)

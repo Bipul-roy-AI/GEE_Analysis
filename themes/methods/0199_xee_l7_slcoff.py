@@ -11,7 +11,7 @@ roi = geometry = border = iran = tehran = province = loc = point = BD_ROI
 from pathlib import Path
 import os
 _REPO_ROOT = Path.cwd()
-_OUTPUT_DIR = _REPO_ROOT / 'outputs' / 'methods' / '0199_xee_l7_slcoff'
+_OUTPUT_DIR = Path(os.environ.get('BDGEE_OUTPUT_DIR', _REPO_ROOT / 'outputs' / 'methods' / '0199_xee_l7_slcoff'))
 _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 os.chdir(_OUTPUT_DIR)
 """00004_landsat7_slcoff_test.ipynb

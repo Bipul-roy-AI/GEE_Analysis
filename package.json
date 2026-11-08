@@ -1,0 +1,7 @@
+{
+  "name": "bangladesh-gee-headless",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Headless planning bridge for the supplied Earth Engine JavaScript examples",
+  "dependencies": {"@google/earthengine": "1.7.51"}
+}

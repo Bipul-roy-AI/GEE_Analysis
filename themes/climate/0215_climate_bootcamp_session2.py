@@ -11,7 +11,7 @@ roi = geometry = border = iran = tehran = province = loc = point = BD_ROI
 from pathlib import Path
 import os
 _REPO_ROOT = Path.cwd()
-_OUTPUT_DIR = _REPO_ROOT / 'outputs' / 'climate' / '0215_climate_bootcamp_session2'
+_OUTPUT_DIR = Path(os.environ.get('BDGEE_OUTPUT_DIR', _REPO_ROOT / 'outputs' / 'climate' / '0215_climate_bootcamp_session2'))
 _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 os.chdir(_OUTPUT_DIR)
 """02_class2_temperature_preparation.ipynb
@@ -30,7 +30,7 @@ None
 None
 '# **Study Area**'
 import geopandas as gpd
-roi = gpd.read_file('iran_border.shp')
+roi = __import__('geemap').ee_to_gdf(BD_COUNTRY)
 roi
 import geemap
 roi_ee = geemap.gdf_to_ee(roi)

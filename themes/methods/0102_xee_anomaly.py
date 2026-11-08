@@ -11,7 +11,7 @@ roi = geometry = border = iran = tehran = province = loc = point = BD_ROI
 from pathlib import Path
 import os
 _REPO_ROOT = Path.cwd()
-_OUTPUT_DIR = _REPO_ROOT / 'outputs' / 'methods' / '0102_xee_anomaly'
+_OUTPUT_DIR = Path(os.environ.get('BDGEE_OUTPUT_DIR', _REPO_ROOT / 'outputs' / 'methods' / '0102_xee_anomaly'))
 _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 os.chdir(_OUTPUT_DIR)
 """GEE_0010_anomaly_mapping.ipynb
@@ -44,7 +44,7 @@ sm_mean['soil'].plot(x='lon', y='lat', cmap='jet', figsize=(7, 4), vmin=10, vmax
 plt.savefig('sm_mean.png', dpi=360)
 anomaly = sm_annual - sm_mean
 anomaly
-shp = gpd.read_file('/content/World_Countries_Generalized.shp')
+shp = __import__('geemap').ee_to_gdf(BD_COUNTRY)
 shp
 shp.crs
 countries = shp.to_crs('EPSG:4326')

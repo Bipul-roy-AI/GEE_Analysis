@@ -128,6 +128,8 @@ ui.Chart.image.seriesByRegion = function(collection, regions, reducer, band, sca
   return BD_seriesByRegion.apply(null,originalArgs);
 };
 
+// Replace the tutorial's missing imported Landsat-8 collection.
+var imageCollection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2');
 
 /*
 Tutorial Code by Amirhossein Ahrari

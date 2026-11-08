@@ -11,7 +11,7 @@ roi = geometry = border = iran = tehran = province = loc = point = BD_ROI
 from pathlib import Path
 import os
 _REPO_ROOT = Path.cwd()
-_OUTPUT_DIR = _REPO_ROOT / 'outputs' / 'methods' / '0176_python_shapefile_add'
+_OUTPUT_DIR = Path(os.environ.get('BDGEE_OUTPUT_DIR', _REPO_ROOT / 'outputs' / 'methods' / '0176_python_shapefile_add'))
 _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 os.chdir(_OUTPUT_DIR)
 """GEE_0099_add_shapefile.ipynb
@@ -37,7 +37,7 @@ point = BD_ROI
 point
 border = BD_ROI
 map.addLayer(border)
-gilan = ee.FeatureCollection('users/amirhosseinahrari/Gilan')
+gilan = BD_COUNTRY
 map2 = geemap.Map()
 map2
 map2.addLayer(gilan, {}, 'gilan')
